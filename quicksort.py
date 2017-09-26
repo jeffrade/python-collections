@@ -13,6 +13,7 @@ def quicksort(arr, stack):
 		positions = stack.pop()
 		left = positions[0]
 		right = positions[1]
+		print("found positions %s, %s in stack" % (left, right))
 		index = partition(arr, left, right)
 		print("current index is %s" % (index))
 		print("current arr is %s" % (arr))
