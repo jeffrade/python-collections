@@ -1,5 +1,6 @@
 # Python 3.7.x or Python 2.7.x
-# Breadth-first search if path from a top node exists to nth child node
+# Breadth-first search if path from a top node exists to nth child node,
+# `graph` dictionary can have vertex values of [], None or not exist.
 
 from collections import deque
 
@@ -9,6 +10,7 @@ graph = {
     3: [],
     4: [7, 8],
     5: [9, 10],
+    6: None,
     7: [11, 12],
     11: [13]
 }
@@ -26,7 +28,7 @@ def bfs(graph, start, end):
             continue
         visited.add(node)
 
-        children = graph.get(node, [])
+        children = graph.get(node, []) or []
         if len(children) == 0:
             continue
         for child in children:
