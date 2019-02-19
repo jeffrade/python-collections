@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# https://github.com/etotheipi/BitcoinArmory/blob/2a6fc5355bb0c6fe26e387ccba30a5baafe8cd98/jasvet.py
 
 # jackjack's signing/verifying tool
 # verifies base64 signatures from Bitcoin
@@ -14,9 +14,8 @@ import hashlib
 import random
 import time
 
-import CppBlockUtils
-from armoryengine.ArmoryUtils import getVersionString, BTCARMORY_VERSION, \
-   ChecksumError
+#import CppBlockUtils
+#from armoryengine.ArmoryUtils import getVersionString, BTCARMORY_VERSION, ChecksumError
 
 
 FTVerbose=False
@@ -38,14 +37,13 @@ RNRN = '\r\n\r\n'
 CLEARSIGN_MSG_TYPE_MARKER = 'BITCOIN SIGNED MESSAGE'
 BITCOIN_SIG_TYPE_MARKER = 'BITCOIN SIGNATURE'
 BASE64_MSG_TYPE_MARKER = 'BITCOIN MESSAGE'
-BITCOIN_ARMORY_COMMENT = 'Comment: Signed by Bitcoin Armory v' +\
-   getVersionString(BTCARMORY_VERSION, 3)
+BITCOIN_ARMORY_COMMENT = 'Comment: Signed by Bitcoin Armory vFOOBAR'# + getVersionString(BTCARMORY_VERSION, 3)
 class UnknownSigBlockType(Exception): pass
    
-def randomk():  
+def randomk():
    # Using Crypto++ CSPRNG instead of python's
-   sbdRandK = CppBlockUtils.SecureBinaryData().GenerateRandom(32)
-   hexRandK = sbdRandK.toBinStr().encode('hex_codec')
+   sbdRandK = random.randint(0, 256) #CppBlockUtils.SecureBinaryData().GenerateRandom(32)
+   hexRandK = hex(sbdRandK) #sbdRandK.toBinStr().encode('hex_codec')
    return int(hexRandK, 16)
 
 
@@ -598,7 +596,7 @@ def readSigBlock(r):
       decoded = base64.b64decode(encoded)
       # Check sum of decoded messgae
       if base64.b64decode(crc) != crc24(decoded):
-         raise ChecksumError
+         raise Exception #ChecksumError
       # The signature is followed by the message and the whole thing is encoded
       # The message always starts at 65 because the signature is 65 bytes.
       signature = base64.b64encode(decoded[:65])
@@ -619,7 +617,7 @@ def readSigBlock(r):
       signature = ''.join(encoded.split('\r'))
       crc = crc.strip()
       if base64.b64decode(crc) != crc24(base64.b64decode(signature)):
-         raise ChecksumError
+         raise Exception #ChecksumError
    else:
       raise UnknownSigBlockType()
    return signature, msg
