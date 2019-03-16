@@ -11,22 +11,21 @@ def main(filename, args):
 def quicksort(arr, stack):
 	while(len(stack) > 0):
 		positions = stack.pop()
-		left = positions[0]
-		right = positions[1]
-		print("found positions %s, %s in stack" % (left, right))
-		index = partition(arr, left, right)
+		left_index = positions[0]
+		right_index = positions[1]
+		print("found positions %s, %s in stack" % (left_index, right_index))
+		index = partition(arr, left_index, right_index)
 		print("current index is %s" % (index))
 		print("current arr is %s" % (arr))
-		if (left < index - 1):
-			stack.append((left, index - 1))
-		if (index < right):
-			stack.append((index, right))
+		if (left_index < index - 1):
+			stack.append((left_index, index - 1))
+		if (index < right_index):
+			stack.append((index, right_index))
 
-def partition(arr, left, right):
-	i = left
-	j = right
-	tmp = None
-	pivot = arr[(left + right) / 2]
+def partition(arr, left_index, right_index):
+	i = left_index
+	j = right_index
+	pivot = arr[(left_index + right_index) / 2]
 	print("current pivot is %s" % (pivot))
 	while (i <= j):
 		while (arr[i] < pivot):
@@ -38,7 +37,6 @@ def partition(arr, left, right):
 			i+=1;
 			j-=1;
 	return i
-
 
 def swap(arr, i, j):
 	print("swapping %s with %s" % (arr[i], arr[j]))
