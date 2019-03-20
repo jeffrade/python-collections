@@ -1,5 +1,5 @@
 # Implementation of Dijkstra's Algorithm
-
+import sys
 from collections import deque
 
 print("""
@@ -19,8 +19,32 @@ print("""
 
 """)
 
-def start(start, end, data):
-    print(start)
+def main(args):
+    print(args)
+    d = Dijkstra()
+    data = [
+        Node("A", ["B", "C"]),
+        Node("B", ["A", "D", "E"]),
+        Node("C", ["A", "E", "F"]),
+        Node("D", ["B", "G"]),
+        Node("E", ["B", "C", "G"]),
+        Node("F", ["C", "G"]),
+        Node("G", ["D", "E", "F"])
+    ]
+    d.find("A", "G", data)
+
+
+class Dijkstra():
+
+    def find(self, start, end, data):
+        shortest_path = []
+        print("Starting at point {}".format(start))
+        print("Looking for shortest path to point {}...".format(end))
+        #TODO
+        print("Done. Shortest path is {}".format(shortest_path))
+
+        return shortest_path
+
 
 class Node:
     def __init__(self, name, neighbors):
@@ -28,7 +52,5 @@ class Node:
         self.neighbors = neighbors
 
 
-data = {Node("A", None)}
-start("A", "G", data)
-
-print("Finish implementing this!")
+if __name__ == "__main__":
+    main(sys.argv[1:])
