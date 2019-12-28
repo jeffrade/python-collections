@@ -12,8 +12,10 @@ class CsvExplore():
     filename = None
     command = None
     column = None
+    sep = None
 
     def __init__(self, args):
+        self.sep = ','
         if len(args) == 3:
             self.filename = args[0]
             self.command = args[1]
@@ -32,7 +34,7 @@ class CsvExplore():
         
     
     def exec_uniq(self):
-        d = pandas.read_csv(self.filename)
+        d = pandas.read_csv(self.filename, sep=self.sep)
         print(d[self.column].unique())
 
     def exec_headers(self):
