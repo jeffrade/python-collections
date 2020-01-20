@@ -3,7 +3,8 @@
 # Example usage: ./csv_explore.py --file foo_bar.csv --command headers 
 import sys
 import argparse
-import pandas as pandas
+import pandas
+import numpy
 
 cmd_choices = ['headers', 'uniq', 'random']
 col_cmd_choices = ['uniq']
