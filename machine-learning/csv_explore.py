@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 # Script that uses pandas lib to understand data in a csv file.
-# Usage: ./csv_explore.py <file> <command> [<options>...]
+# Example usage: ./csv_explore.py --file foo_bar.csv --command headers 
 import sys
+import argparse
 import pandas as pandas
 
+cmd_choices = ['headers', 'uniq', 'random']
+col_cmd_choices = ['uniq']
+
 def main(args):
-    e = CsvExplore(args)
+    e = CsvExplore()
     e.exec()
 
 class CsvExplore():
@@ -15,21 +19,26 @@ class CsvExplore():
     sep = None
     rand_count = None
 
-    def __init__(self, args):
+    def __init__(self):
+        parser = argparse.ArgumentParser(description='Uses pandas to explore a csv file.')
+        parser.add_argument('--file', required=True, help='Relative path of the file you want to explore')
+        parser.add_argument('--command', required=True, help='A command to run on the file', choices=cmd_choices)
+        parser.add_argument('--column', help='Required only if using a column command, e.g. uniq')
+        args = parser.parse_args()
+
         self.sep = ','
         self.rand_count = 100
-        if len(args) == 3:
-            self.filename = args[0]
-            self.command = args[1]
-            self.column = args[2]
-        elif len(args) == 2:
-            self.filename = args[0]
-            self.command = args[1]
-        else:
-            sys.exit("You must supply args: \"file command [options]\"")
+        self.filename = args.file
+        self.command = args.command
+        self.column = args.column
+        self.filename = args.file
+        self.command = args.command
     
     def exec(self):
         if self.command == 'uniq':
+            if self.column is None:
+                print("Please provide a column with --column flag")
+                sys.exit()
             self.exec_uniq()
         elif self.command == 'headers':
             self.exec_headers()
@@ -39,7 +48,9 @@ class CsvExplore():
     def exec_random_rows(self):
         d = pandas.read_csv(self.filename, sep=self.sep)
         rand_rows = d.sample(n=self.rand_count)
-        self.write_to_csv(rand_rows, self.filename + '.random')
+        output_file = self.filename + '.random'
+        self.write_to_csv(rand_rows, output_file)
+        print(f'File located at {output_file}')
 
     def exec_uniq(self):
         d = pandas.read_csv(self.filename, sep=self.sep)
@@ -53,4 +64,4 @@ class CsvExplore():
         df.to_csv(file_name, sep=',', index_label='index')
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main(sys.argv)
