@@ -29,6 +29,7 @@ class CsvExplore():
 
         self.sep = ','
         self.rand_count = 100
+        self.rand_state = numpy.random.RandomState()
         self.filename = args.file
         self.command = args.command
         self.column = args.column
@@ -48,7 +49,7 @@ class CsvExplore():
         
     def exec_random_rows(self):
         d = pandas.read_csv(self.filename, sep=self.sep)
-        rand_rows = d.sample(n=self.rand_count)
+        rand_rows = d.sample(n=self.rand_count, random_state=self.rand_state)
         output_file = self.filename + '.random'
         self.write_to_csv(rand_rows, output_file)
         print(f'File located at {output_file}')
