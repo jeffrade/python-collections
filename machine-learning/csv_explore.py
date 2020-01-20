@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # Script that uses pandas lib to understand data in a csv file.
-# Example usage: ./csv_explore.py --file foo_bar.csv --command headers 
+# Example usage: ./csv_explore.py --file data.csv --command headers 
 import sys
 import argparse
 import pandas
 import numpy
 
-cmd_choices = ['headers', 'uniq', 'random']
+cmd_choices = ['headers', 'uniq', 'random', 'create_sets']
 col_cmd_choices = ['uniq']
 
 def main(args):
@@ -28,7 +28,7 @@ class CsvExplore():
         args = parser.parse_args()
 
         self.sep = ','
-        self.rand_count = 100
+        self.rand_frac = .20
         self.rand_state = numpy.random.RandomState()
         self.filename = args.file
         self.command = args.command
@@ -46,10 +46,11 @@ class CsvExplore():
             self.exec_headers()
         elif self.command == 'random':
             self.exec_random_rows()
+        elif self.command == 'create_sets':
+            self.exec_create_sets()
         
     def exec_random_rows(self):
-        d = pandas.read_csv(self.filename, sep=self.sep)
-        rand_rows = d.sample(n=self.rand_count, random_state=self.rand_state)
+        df, rand_rows = self.get_rand_rows()
         output_file = self.filename + '.random'
         self.write_to_csv(rand_rows, output_file)
         print(f'File located at {output_file}')
@@ -61,6 +62,16 @@ class CsvExplore():
     def exec_headers(self):
         d = pandas.read_csv(self.filename)
         print(d.columns.values.tolist())
+
+    def exec_create_sets(self):
+        df, test_rows = self.get_rand_rows()
+        train_rows = df.drop(test_rows.index)
+        self.write_to_csv(test_rows, self.filename + '.test')
+        self.write_to_csv(train_rows, self.filename + '.train')
+
+    def get_rand_rows(self):
+        df = pandas.read_csv(self.filename, sep=self.sep)
+        return df, df.sample(frac=self.rand_frac, replace=False, random_state=self.rand_state)
 
     def write_to_csv(self, df, file_name):
         df.to_csv(file_name, sep=',', index_label='index')
