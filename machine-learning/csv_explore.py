@@ -57,7 +57,9 @@ class CsvExplore():
 
     def exec_uniq(self):
         d = pandas.read_csv(self.filename, sep=self.sep)
-        print(d[self.column].unique())
+        values = numpy.sort(d[self.column].unique())
+        for v in values:
+            print(v)
 
     def exec_headers(self):
         d = pandas.read_csv(self.filename)
